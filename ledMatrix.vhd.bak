@@ -1,0 +1,74 @@
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+
+ENTITY top IS
+    PORT (
+        clk_50    : IN  STD_LOGIC; -- horloge principale du FPGA
+        reset_btn : IN  STD_LOGIC;
+
+        -- Interface matrice LED HUB75
+        R1, G1, B1       : OUT STD_LOGIC;
+        R2, G2, B2       : OUT STD_LOGIC;
+        CLK, LAT, OE     : OUT STD_LOGIC;
+        A, B, C          : OUT STD_LOGIC
+        -- Ajouter D, E si matrice plus grande (64x64 par ex.)
+    );
+END top;
+
+ARCHITECTURE rtl OF top IS
+
+    SIGNAL clock_4    : STD_LOGIC;
+    SIGNAL rom_add_t  : STD_LOGIC_VECTOR(8 DOWNTO 0);
+    SIGNAL rom_add_b  : STD_LOGIC_VECTOR(8 DOWNTO 0);
+
+    SIGNAL rom_data_t : STD_LOGIC_VECTOR(31 DOWNTO 0);
+    SIGNAL rom_data_b : STD_LOGIC_VECTOR(31 DOWNTO 0);
+
+BEGIN
+
+    -- PLL instantiation
+    pll_inst : ENTITY work.pll
+        PORT MAP (
+            inclk0 => clk_50,
+            c0     => clock_4
+        );
+
+    -- Contrôleur HLSM
+    hlsm_inst : ENTITY work.hlsm
+        PORT MAP (
+            a_rst     => reset_btn,
+            clock_4   => clock_4,
+            mx_LE     => LAT,
+            mx_OE     => OE,
+            mx_clock  => CLK,
+            mx_CBA    => A & B & C,  -- Lignes de la matrice
+            rom_add_t => rom_add_t,
+            rom_add_b => rom_add_b
+        );
+
+    -- ROM haut (ligne supérieure)
+    rom_top : ENTITY work.imageROM
+        PORT MAP (
+            address => rom_add_t(7 DOWNTO 0),
+            clock   => clock_4,
+            q       => rom_data_t
+        );
+
+    -- ROM bas (ligne inférieure)
+    rom_bot : ENTITY work.imageROM
+        PORT MAP (
+            address => rom_add_b(7 DOWNTO 0),
+            clock   => clock_4,
+            q       => rom_data_b
+        );
+
+    -- Pixels RGB (ici monochrome = juste rouge en exemple)
+    R1 <= rom_data_t(0);
+    R2 <= rom_data_b(0);
+    G1 <= '0';
+    G2 <= '0';
+    B1 <= '0';
+    B2 <= '0';
+
+END rtl;
