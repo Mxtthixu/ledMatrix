@@ -65,7 +65,7 @@ set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
-set_location_assignment PIN_W13 -to mx_cba[0]
+set_location_assignment PIN_AA14 -to mx_cba[0]
 set_location_assignment PIN_AB13 -to mx_cba[1]
 set_location_assignment PIN_Y11 -to mx_cba[2]
 set_location_assignment PIN_AA10 -to CLK
@@ -80,12 +80,9 @@ set_location_assignment PIN_W7 -to R2
 set_location_assignment PIN_V5 -to G2
 set_location_assignment PIN_AA15 -to B2
 set_global_assignment -name QIP_FILE PLL.qip
-set_global_assignment -name HEX_FILE redROM.hex
 set_global_assignment -name QIP_FILE redROM.qip
 set_global_assignment -name VHDL_FILE hlsm.vhd
 set_global_assignment -name VHDL_FILE ledMatrix.vhd
-set_global_assignment -name HEX_FILE greenROM.hex
-set_global_assignment -name HEX_FILE blueROM.hex
 set_global_assignment -name QIP_FILE greenROM.qip
 set_global_assignment -name QIP_FILE blueROM.qip
 set_global_assignment -name VECTOR_WAVEFORM_FILE PLL_tb.vwf
